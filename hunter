@@ -1,0 +1,30 @@
+.\" Manpage for Hunter.
+.\" Submit an issue to https://github.com/amranidev/hunter to correct errors or typos.
+.TH man 1 "28 Jul 2022" "dev" "hunter man page"
+.SH NAME
+hunter  \- Hunter Command Line Interface 'CLI'
+.SH SYNOPSIS
+hunter new [CREDENTIAL_FILE]
+.SH DESCRIPTION
+Hunter is a python executable script that helps manage multiple AWS credential files.
+.SH OPTIONS
+Hunter does not take any options. However.
+.SH EXAMPLES
+.TP 5
+\fI hunter new production \fP
+This will ask you to fill the ACCESS_KEY and SECRET_KEY and generate store the AWS file in .aws directory
+.TP
+\fI hunter use production \fP
+The 'credentials' file will be replaced with 'production', in other words, we're ordering hunter to use the credentials we just created.
+.TP
+\fI hunter list \fP
+List available credentials that we have.
+.TP
+\fI hunter delete production \fP
+This will delete the credential we already created.
+.SH SEE ALSO
+https://github.com/amranidev/hunter
+.SH BUGS
+https://github.com/amranidev/hunter
+.SH AUTHOR
+HOUSSAIN AMRANI https://github.com/amranidev
