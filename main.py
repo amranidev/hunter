@@ -64,7 +64,11 @@ def update_config_with_used_credentials(credentials_name):
     if os.path.exists(aws_path + credentials):
         os.rename(aws_path + 'credentials', aws_path + previous_used)
 
-    os.rename(aws_path + credentials_name, aws_path + 'credentials')
+    if os.path.exists(aws_path + credentials_name):
+        os.rename(aws_path + credentials_name, aws_path + 'credentials')
+    else:
+        print('\033[0;31m' + credentials_name + ' does not exists or the config file is corrupted!')
+        exit(1)
 
     return results
 
@@ -88,7 +92,7 @@ def check_if_credentials_exists_before_creating_new_one(credentials_name):
     @return:
     """
     if os.path.exists(aws_path + credentials_name):
-        print('The file is already exists, hunter cannot create this configuration')
+        print('\033[0;31mERROR: The file is already exists, hunter cannot create this configuration\033[0m')
         exit(1)
 
     [hunter_config_file, file_content] = read_hunter_config()
@@ -123,12 +127,11 @@ def new(credentials_name):
     content = Template(template.read())
 
     path = os.path.expanduser('~/.aws/') + credentials_name
-    print(path)
     file = open(path, "x")
     file.write(content.substitute(compiler))
     file.close()
     add_new_config_row(credentials_name)
-    print('done')
+    print('\033[0;32mDone\033[0m')
 
 
 def use(credentials_name):
@@ -145,13 +148,13 @@ def delete(credentials_name):
     @param credentials_name:
     """
     if not os.path.exists(aws_path + credentials_name):
-        print('Credentials does not exists or already in use.'
-              ' Make sure the credentials file exists OR switch the current credentials to a new one.')
+        print('\033[0;31m ERROR: Credentials does not exists or already in use.'
+              ' Make sure the credentials file exists OR switch the current credentials to a new one.\033[0m')
         exit(1)
 
     os.remove(aws_path + credentials_name)
 
-    print('done')
+    print('\033[0;32mDone\033[0m')
 
 
 def list_credentials():
@@ -202,19 +205,22 @@ if __name__ == '__main__':
     set_up()
     hunter_commands = ['new', 'delete', 'use', 'list'];
 
-    if len(sys.argv) < 3:
-        print('Not enough arguments')
+    if len(sys.argv) < 2:
+        print('\033[0;31m ERROR: Not enough arguments\033[0m')
         sys.exit(1)
 
     command = sys.argv[1]
 
     if command not in hunter_commands:
-        print(command + ' Not found')
+        print('\033[0;31mERROR:' + command + ' Not found\033[0m')
         sys.exit(1)
 
     if command == 'list':
         list_credentials()
-    else:
+
+    try:
         credentials_name = sys.argv[2]
         command_to_execute = globals()[command]
         command_to_execute(credentials_name)
+    except IndexError:
+        print('\033[0;31m Credential name is not specified\033[0m')
