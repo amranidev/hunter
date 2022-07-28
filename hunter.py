@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import sys
 from string import Template
@@ -206,7 +208,7 @@ if __name__ == '__main__':
     hunter_commands = ['new', 'delete', 'use', 'list'];
 
     if len(sys.argv) < 2:
-        print('\033[0;31m ERROR: Not enough arguments\033[0m')
+        print('\033[0;31m ERROR: Not enough arguments, run: (man hunter)\033[0m')
         sys.exit(1)
 
     command = sys.argv[1]
@@ -217,6 +219,8 @@ if __name__ == '__main__':
 
     if command == 'list':
         list_credentials()
+        # Force exit here because I'm lazy to modify all that shit \_(*<>*)_/
+        exit(0)
 
     try:
         credentials_name = sys.argv[2]
